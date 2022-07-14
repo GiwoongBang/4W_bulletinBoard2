@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="basic.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <title>Free Board Service</title>
+
+    <style>
+        @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+
+        body {
+            margin: 0px;
+        }
+
+        .area-edit {
+            display: none;
+        }
+
+        .wrap {
+            width: 538px;
+            margin: 10px auto;
+        }
+
+        .nav {
+            width: 530px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .nav div {
+            cursor: pointer;
+        }
+
+        .nav div.active {
+            font-weight: 700;
+        }
+
+        #contents {
+            width: 538px;
+        }
+
+        .area-write {
+            position: relative;
+            width: 538px;
+        }
+
+        .area-write img {
+            cursor: pointer;
+            position: absolute;
+            width: 22.2px;
+            height: 18.7px;
+            bottom: 15px;
+            right: 17px;
+        }
+
+        .background-header {
+            position: fixed;
+            z-index: -1;
+            top: 0px;
+            width: 100%;
+            height: 428px;
+            background-color: #339af0;
+        }
+
+        .background-body {
+            position: fixed;
+            z-index: -1;
+            top: 428px;
+            height: 100%;
+            width: 100%;
+            background-color: #dee2e6;
+        }
+
+        .header {
+            margin-top: 50px;
+        }
+
+        .header h2 {
+            /*font-family: 'Noto Sans KR', sans-serif;*/
+            height: 33px;
+            font-size: 42px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.79;
+            letter-spacing: -0.5px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header p {
+            margin: 40px auto;
+            width: 217px;
+            height: 48px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: -1.12px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        textarea.field {
+            width: 502px !important;
+            height: 146px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+        }
+
+        textarea.field::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
+
+        .card {
+            width: 538px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .card .metadata {
+            position: relative;
+            display: flex;
+            font-family: 'Spoqa Han Sans';
+            font-size: 11px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.77px;
+            text-align: left;
+            color: #adb5bd;
+            height: 14px;
+            padding: 10px 23px;
+        }
+
+        .card .metadata .title {
+            font-size: 11px;
+        }
+
+        .card .metadata .date {
+            margin-left: 20px;
+        }
+
+        .card .metadata .username {
+            margin-left: 20px;
+        }
+
+        .contents {
+            margin-top: 5px;
+            padding: 0px 23px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .contents div.edit {
+            display: none;
+        }
+
+        .contents textarea.te-edit {
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            resize: none;
+            border-bottom: 1px solid #212529;
+            width: 100%;
+            font-family: 'Spoqa Han Sans';
+        }
+
+        .btn {
+            position: relative;
+            height: 40px;
+        }
+
+        .btn img.icon-start-edit {
+            cursor: pointer;
+            position: absolute;
+            bottom: 14px;
+            right: 55px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn img.icon-end-edit {
+            cursor: pointer;
+            position: absolute;
+            display: none;
+            bottom: 14px;
+            right: 55px;
+            width: 20px;
+            height: 15px;
+        }
+
+        .btn img.icon-delete {
+            cursor: pointer;
+            position: absolute;
+            bottom: 12px;
+            right: 19px;
+            width: 14px;
+            height: 18px;
+        }
+
+        #cards-box {
+            margin-top: 12px;
+        }
+
+        /*.modal {*/
+        /*    display: none;*/
+        /*    width: 40%;*/
+        /*    height: 40%;*/
+        /*    background: #868e96;*/
+        /*}*/
+
+        .modal {
+            position: fixed;
+            top: 0;
+            z-index: 2;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #logout-text {
+            color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+  <div class="background-header">
+
+  </div>
+  <div class="background-body">
+
+  </div>
+  <div class="wrap">
+      <nav>
+          <form id="my_form" method="post" style="text-align: right" action="/user/logout">
+              <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그아웃</a>
+          </form>
+      </nav>
+      <div class="header">
+          <h2>Free Board</h2>
+          <p>
+              공유하고 싶은 소식을 입력해주세요.
+              24시간이 지난 뒤에는 사라집니다.
+          </p>
+      </div>
+
+      <div class="nav">
+          <div class="post-see active">
+              전체 목록 조회
+          </div>
+          <div class="post-edit">
+              게시글 조회, 수정, 삭제
+          </div>
+          <div class="write-post">
+              게시글 작성하기
+          </div>
+      </div>
+      <div class="area-write" id="area-write" style="display: none">
+          <input class="input" type="text" style="margin-bottom: 5px" placeholder="제목을 입력해주세요" name="title" id="title">
+          <input class="input" type="text" style="margin-bottom: 5px" placeholder="닉네임을 입력해주세요" name="username"
+                 id="username">
+          <input class="input" type="password" style="margin-bottom: 5px" placeholder="수정/삭제시 이용할 비밀번호를 입력해주세요"
+                 name="password" id="password">
+          <textarea class="textarea" placeholder="게시글 내용을 입력해주세요" name="contents" id="contents" rows="10"></textarea>
+          <!--        <textarea class="field" placeholder="공유하고 싶은 소식을 입력해주세요" name="contents" id="contents" cols="30"-->
+          <!--                  rows="10"></textarea>-->
+          <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
+          <img src="images/send.png" alt="" onclick="writePost()">
+      </div>
+      <div class="area-read">
+          <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth" id="table">
+              <thead>
+              <tr>
+                  <th>제목</th>
+                  <th>작성 날짜</th>
+                  <th>작성자</th>
+              </tr>
+              </thead>
+              <tbody class="cards-box" id="cards-box">
+
+              </tbody>
+          </table>
+      </div>
+      <div id="posts-box">
+
+      </div>
+      <div id="modal-js-example" class="modal hidden">
+          <div class="modal-content">
+              <div class="box">
+                  <div class="selectpost">
+
+                  </div>
+              </div>
+          </div>
+
+          <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+      </div>
+  </div>
+</body>
+</html>
